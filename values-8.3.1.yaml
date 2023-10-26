@@ -1869,7 +1869,7 @@ identity:
       ## @param identity.keycloak.service.type can be set to change the service type.
       # We use clusterIP for keycloak service, since per default LoadBalancer is used, which is not supported on all cloud providers.
       # This might prevent scheduling of the service.
-      type: ClusterIP
+      type: LoadBalancer
     ## Keycloak authentication parameters
     ## ref: https://github.com/bitnami/bitnami-docker-keycloak#admin-credentials
     ##

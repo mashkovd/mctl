@@ -8,7 +8,15 @@
 cd mctl
 terraform init --upgrade
 terraform validate
+```  
+
+``` bash
 terraform apply -auto-approve
+```  
+
+
+
+``` bash
 terraform destroy -auto-approve
 ```    
 

@@ -159,7 +159,7 @@ module "kube-hetzner" {
       location    = "fsn1",
       labels      = [],
       taints      = [],
-      count       = 0
+      count       = 1
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
@@ -170,7 +170,7 @@ module "kube-hetzner" {
       location    = "fsn1",
       labels      = [],
       taints      = [],
-      count       = 1
+      count       = 0
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
@@ -405,7 +405,7 @@ module "kube-hetzner" {
   # If you want to configure additional arguments for traefik, enter them here as a list and in the form of traefik CLI arguments; see https://doc.traefik.io/traefik/reference/static-configuration/cli/
   # They are the options that go into the additionalArguments section of the Traefik helm values file.
   # Example:
-  # traefik_additional_options = ["--log.level=DEBUG", "--tracing=true"]
+  traefik_additional_options = ["--log.level=DEBUG", "--tracing=true"]
 
   # By default traefik is configured to redirect http traffic to https, you can set this to "false" to disable the redirection.
   # The default is true.
