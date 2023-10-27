@@ -5,6 +5,4 @@ resources:
   - letsencrypt-staging.yaml
   - letsencrypt-prod.yaml
   - dashboard.yaml
-  - argocd.yaml
-
 
