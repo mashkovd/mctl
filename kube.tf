@@ -166,11 +166,11 @@ module "kube-hetzner" {
     },
     {
       name        = "agent-large",
-      server_type = "cpx31",
+      server_type = "cx41",
       location    = "fsn1",
       labels      = [],
       taints      = [],
-      count       = 2
+      count       = 1
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
