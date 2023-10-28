@@ -135,7 +135,7 @@ global:
     ## @extra global.identity.auth configuration, to configure identity authentication setup
     auth:
       ## @param global.identity.auth.enabled if true, enables the identity authentication otherwise basic-auth will be used on all services.
-      enabled: true
+      enabled: false
 
       #  defines the token issuer (Keycloak) URL, where the services can request JWT tokens.
       # Should be publicly accessible, per default we assume a port-forward to Keycloak (18080) is created before login.
@@ -199,7 +199,7 @@ global:
       zeebe:
         ## @param global.identity.auth.zeebe.existingSecret can be used to use an own existing secret. If not set a random secret is generated.
         # The existing secret should contain an `zeebe-secret` field, which will be used as secret for the Identity-Zeebe communication.
-        existingSecret: ""
+        existingSecret:
 
 
 ###################################
@@ -1845,24 +1845,28 @@ identity:
     # under "global.ingress" is enabled. However, it's possible to setup Keycloak on a separate Ingress if needed.
     # For more details: https://github.com/bitnami/charts/tree/main/bitnami/keycloak#configure-ingress
     ingress:
-
       ## @param identity.keycloak.ingress.enabled can be used enable ingress record generation for Keycloak.
       enabled: true
-      ingressClassName: traefik
-      hostname: "keycloak.mctl.ru"
-      annotations:
-        ## @skip identity.keycloak.ingress.annotations.nginx.ingress.kubernetes.io/proxy-buffer-size
-        ingress.kubernetes.io/rewrite-target: "/"
-        nginx.ingress.kubernetes.io/ssl-redirect: "false"
-        nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
-        cert-manager.io/cluster-issuer: letsencrypt-staging
       ## @param identity.keycloak.ingress.tls can be used to enable TLS configuration for the host defined at ingress.hostname parameter.
       tls: true
+      ## @param identity.keycloak.ingress.extraTls configuration for additional hostnames to be covered with this ingress record.
+      extraTls: []
+      ## @param identity.keycloak.ingress.annotations [object] configures annotations to be applied to the ingress record.
+      annotations:
+      ## @skip identity.keycloak.ingress.annotations.nginx.ingress.kubernetes.io/proxy-buffer-size
+        nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+        ingress.kubernetes.io/rewrite-target: "/"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+
+        cert-manager.io/cluster-issuer: letsencrypt-staging
+      ingressClassName: traefik
+      hostname: "keycloak.mctl.ru"
+
+
 
       ## @param identity.keycloak.ingress.extraTls configuration for additional hostnames to be covered with this ingress record.
       extraTls: []
       ## @param identity.keycloak.ingress.annotations [object] configures annotations to be applied to the ingress record.
-
 
     ## @extra identity.keycloak.service configuration, to configure the service which is deployed along with keycloak
     service:
@@ -2965,8 +2969,6 @@ elasticsearch:
   ## @param elasticsearch.enabled
   enabled: true
   replicas: 1
-  replicaCount: 0
-  minimumMasterNodes: 1
   # https://hub.docker.com/r/bitnami/elasticsearch/tags
   image:
     ## @param elasticsearch.image.repository
@@ -3015,12 +3017,12 @@ elasticsearch:
         ## @param elasticsearch.master.resources.requests.cpu cpu request
         cpu: 1
         ## @param elasticsearch.master.resources.requests.memory request
-        memory: 3Gi
+        memory: 2Gi
       limits:
         ## @param elasticsearch.master.resources.limits.cpu cpu limit
-        cpu: 4
+        cpu: 2
         ## @param elasticsearch.master.resources.limits.memory memory limit
-        memory: 4Gi
+        memory: 2Gi
     extraEnvVars:
     ## @param elasticsearch.master.extraEnvVars[0].name env
     - name: ELASTICSEARCH_ENABLE_REST_TLS
