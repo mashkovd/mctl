@@ -14,12 +14,6 @@ terraform validate
 terraform apply -auto-approve
 ```  
 
-
-
-``` bash
-terraform destroy -auto-approve
-```    
-
 ``` bash
 sudo ip addr add 116.202.7.239 dev eth0 # 116.202.7.239 - floating IP
 ```    
@@ -55,7 +49,7 @@ helm upgrade --install camunda camunda/camunda-platform --version $VERSION -n ca
 ```
 
 ```bash
-kubectl port-forward svc/camunda-zeebe-gateway 26500:26500 -n camunda
+zbctl --insecure --address zeebe.mctl.ru:26500 status
 ```
 1. upgrade app by helm
 ```bash
@@ -73,7 +67,7 @@ export KEYCLOAK_MANAGEMENT_SECRET=$(kubectl get secret "$RELEASE_NAME-keycloak" 
 export POSTGRESQL_SECRET=$(kubectl get secret "$RELEASE_NAME-postgresql" -o jsonpath="{.data.postgres-password}"   -n $RELEASE_NAME | base64 --decode)
 export CONSOLE_SECRET=$(kubectl get secret --namespace $RELEASE_NAME "camunda-console-identity-secret" -o jsonpath="{.data.console-secret}" | base64 -d)
 
-helm upgrade --install $RELEASE_NAME camunda/camunda-platform --version $VERSION   -n $RELEASE_NAME --create-namespace --set global.identity.auth.tasklist.existingSecret=$TASKLIST_SECRET,global.identity.auth.optimize.existingSecret=$OPTIMIZE_SECRET,global.identity.auth.operate.existingSecret=$OPERATE_SECRET,global.identity.auth.zeebe.existingSecret=$ZEEBE_SECRET,global.identity.auth.console.existingSecret=$CONSOLE_SECRET,global.identity.auth.connectors.existingSecret=$CONNECTORS_SECRET -f $VALUES_FILE
+helm upgrade --install $RELEASE_NAME camunda/camunda-platform --version $VERSION   -n $RELEASE_NAME --create-namespace --set global.identity.auth.tasklist.existingSecret=$TASKLIST_SECRET,global.identity.auth.optimize.existingSecret=$OPTIMIZE_SECRET,global.identity.auth.operate.existingSecret=$OPERATE_SECRET,global.identity.auth.console.existingSecret=$CONSOLE_SECRET,global.identity.auth.connectors.existingSecret=$CONNECTORS_SECRET,global.identity.auth.zeebe.existingSecret=$ZEEBE_SECRET -f $VALUES_FILE
 ```
 
 1 install cert-manager and ClusterIssuer
