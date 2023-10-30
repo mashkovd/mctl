@@ -120,7 +120,7 @@ module "kube-hetzner" {
       name        = "control-plane-fsn1",
       server_type = "cpx11",
       location    = "fsn1",
-      labels      = [],
+      labels      = ["node-type=control-node"],
       taints      = [],
       count       = 1
       # swap_size   = "2G" # remember to add the suffix, examples: 512M, 1G
@@ -157,9 +157,9 @@ module "kube-hetzner" {
       name        = "agent-small",
       server_type = "cpx21",
       location    = "fsn1",
-      labels      = [],
+      labels      = ["node-type=app"],
       taints      = [],
-      count       = 1
+      count       = 0
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
@@ -168,7 +168,7 @@ module "kube-hetzner" {
       name        = "agent-large",
       server_type = "cx41",
       location    = "fsn1",
-      labels      = [],
+      labels      = ["node-type=app"],
       taints      = [],
       count       = 1
 
