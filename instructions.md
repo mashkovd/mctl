@@ -49,7 +49,9 @@ helm upgrade --install camunda camunda/camunda-platform --version $VERSION -n ca
 ```
 
 ```bash
-zbctl --insecure --address zeebe.mctl.ru:26500 status
+zbctl --insecure --address zeebe.mctl.ru:26500 status --clientId zeebe --clientSecret eZAtuz6ayY --authzUrl http://keycloak.mctl.ru/auth/realms/camunda-platform/protocol/openid-connect/token
+
+
 ```
 1. upgrade app by helm
 ```bash
@@ -97,3 +99,7 @@ or
 kubectl apply -f argocd-IngressRoute.yaml
 argocd login argocd.mctl.ru --username admin --password uzb5NsqQVEMOFjl3
 ```
+
+
+additional urls:
+https://github.com/camunda/camunda-platform-helm/issues/917 (cannot patch "<deployment-name-here>-zeebe-gateway")
