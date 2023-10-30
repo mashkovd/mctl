@@ -135,7 +135,7 @@ global:
     ## @extra global.identity.auth configuration, to configure identity authentication setup
     auth:
       ## @param global.identity.auth.enabled if true, enables the identity authentication otherwise basic-auth will be used on all services.
-      enabled: false
+      enabled: true
 
       #  defines the token issuer (Keycloak) URL, where the services can request JWT tokens.
       # Should be publicly accessible, per default we assume a port-forward to Keycloak (18080) is created before login.
@@ -197,6 +197,17 @@ global:
 
       ## @extra global.identity.auth.zeebe configuration to configure Zeebe authentication specifics on global level, which can be accessed by other sub-charts
       zeebe:
+#        authentication:
+#          ## @param global.identity.auth.zeebe.authentication.mode defines the authentication mode which is used by the Zeebe brokers
+#          #  none - means no authentication is used
+#          #  identity - means the Zeebe brokers use the identity service for authentication
+#          mode: none
+#          ## @param global.identity.auth.zeebe.authentication.identity defines the identity configuration which is used by the Zeebe brokers
+#          identity:
+#            ## @param global.identity.auth.zeebe.authentication.identity.
+#            issuerBackendUrl: https://keycloak.mctl.ru/auth/realms/camunda-platform
+#            audience: zeebe-api
+#            type: keycloak
         ## @param global.identity.auth.zeebe.existingSecret can be used to use an own existing secret. If not set a random secret is generated.
         # The existing secret should contain an `zeebe-secret` field, which will be used as secret for the Identity-Zeebe communication.
         existingSecret:
@@ -214,6 +225,18 @@ global:
 ## @section Zeebe Parameters
 ## @extra zeebe configuration for the Zeebe sub chart. Contains configuration for the Zeebe broker and related resources.
 zeebe:
+#  gateway:
+#    cluster:
+#      security:
+#        authentication:
+#          mode: none
+##      security:
+##        authentication:
+##          mode: identity
+##          identity:
+##            issuerBackendUrl: https://keycloak.mctl.ru/auth/realms/camunda-platform
+##            audience: zeebe-api
+##            type: keycloak
   ## @param zeebe.enabled if true, all zeebe related resources are deployed via the helm release
   enabled: true
 
@@ -476,6 +499,16 @@ zeebe:
 ## @section Zeebe Gateway Parameters
 ## @extra Gateway configuration to define properties related to the standalone gateway
 zeebe-gateway:
+##  security:
+##    authentication:
+##      mode: identity
+##      identity:
+##        issuerBackendUrl: https://keycloak.mctl.ru/auth/realms/camunda-platform
+##        audience: zeebe-api
+##        type: keycloak
+#  security:
+#    authentication:
+#      mode: none
   ## @param zeebe-gateway.replicas defines how many standalone gateways are deployed
   replicas: 1
   ## @extra zeebe-gateway.image configuration to configure the zeebe-gateway image specifics
@@ -506,7 +539,9 @@ zeebe-gateway:
     -XX:+ExitOnOutOfMemoryError
 
   ## @param zeebe-gateway.env can be used to set extra environment variables in each gateway container
-  env: []
+  env:
+  - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_MODE
+    value: "NONE"
   ## @extra zeebe-gateway.configMap configuration which will be applied to the mounted config map.
   configMap:
     ## @param zeebe-gateway.configMap.defaultMode can be used to set permissions on created files by default. Must be an octal value between 0000 and 0777 or a decimal value between 0 and 511.
@@ -653,7 +688,7 @@ zeebe-gateway:
   ## @extra zeebe-gateway.service configuration for the gateway service
   service:
     ## @param zeebe-gateway.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: ClusterIP
+    type: LoadBalancer
     ## @param zeebe-gateway.service.loadBalancerIP defines public ip of the load balancer if the type is LoadBalancer
     loadBalancerIP: ""
     ## @param zeebe-gateway.service.loadBalancerSourceRanges defines list of allowed source ip address ranges if the type is LoadBalancer
@@ -684,7 +719,7 @@ zeebe-gateway:
 
   ingress:
     ## @param zeebe-gateway.ingress.enabled if true, an ingress resource is deployed with the Zeebe gateway deployment. Only useful if an ingress controller is available, like nginx.
-    enabled: false
+    enabled: true
     ## @param zeebe-gateway.ingress.className defines the class or configuration of ingress which should be used by the controller
     className: traefik
     ## @param zeebe-gateway.ingress.annotations [object] defines the ingress related annotations, consumed mostly by the ingress controller
@@ -697,11 +732,12 @@ zeebe-gateway:
       nginx.ingress.kubernetes.io/ssl-redirect: "false"
       nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
       nginx.ingress.kubernetes.io/proxy-buffer-size: "128k"
+      cert-manager.io/cluster-issuer: letsencrypt-staging
     ## @param zeebe-gateway.ingress.path defines the path which is associated with the operate service and port https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
     path: /
     ## @param zeebe-gateway.ingress.host can be used to define the host of the ingress rule. https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-rules
     # If not specified the rules applies to all inbound http traffic, if specified the rule applies to that host.
-    host: ""
+    host: "zeebe.mctl.ru"
     ## @extra zeebe-gateway.ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
     tls:
       ## @param zeebe-gateway.ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
@@ -759,7 +795,7 @@ operate:
   ## @extra operate.service configuration to configure the Operate service.
   service:
     ## @param operate.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: ClusterIP
+    type: LoadBalancer
     ## @param operate.service.port defines the port of the service, where the Operate web application will be available
     port: 80
     ## @param operate.service.annotations can be used to define annotations, which will be applied to the Operate service
@@ -971,7 +1007,7 @@ tasklist:
   ## @extra tasklist.service configuration to configure the tasklist service.
   service:
     ## @param tasklist.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: ClusterIP
+    type: LoadBalancer
     ## @param tasklist.service.port defines the port of the service, where the tasklist web application will be available
     port: 80
 
@@ -1405,7 +1441,7 @@ identity:
   ## @extra identity.service configuration to configure the identity service.
   service:
     ## @param identity.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: ClusterIP
+    type: LoadBalancer
     ## @param identity.service.annotations can be used to define annotations, which will be applied to the identity service
     annotations: {}
     ## @param identity.service.port defines the port of the service on which the identity application will be available
@@ -1873,7 +1909,7 @@ identity:
       ## @param identity.keycloak.service.type can be set to change the service type.
       # We use clusterIP for keycloak service, since per default LoadBalancer is used, which is not supported on all cloud providers.
       # This might prevent scheduling of the service.
-      type: ClusterIP
+      type: LoadBalancer
     ## Keycloak authentication parameters
     ## ref: https://github.com/bitnami/bitnami-docker-keycloak#admin-credentials
     ##
