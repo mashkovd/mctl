@@ -49,6 +49,10 @@ helm upgrade --install camunda camunda/camunda-platform --version $VERSION -n ca
 ```
 
 ```bash
+helm uninstall camunda -n camunda && kubectl delete ns camunda
+ ```
+
+```bash
 ## !!! OPEN 26500 port
 export RELEASE_NAME=camunda
 export ZEEBE_SECRET=$(kubectl get secret "$RELEASE_NAME-zeebe-identity-secret" -o jsonpath="{.data.zeebe-secret}"   -n $RELEASE_NAME | base64 --decode)

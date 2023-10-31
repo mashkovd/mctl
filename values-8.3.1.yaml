@@ -3065,9 +3065,9 @@ elasticsearch:
         memory: 1Gi
       limits:
         ## @param elasticsearch.master.resources.limits.cpu cpu limit
-        cpu: 2700Mi
+        cpu: 2500m
         ## @param elasticsearch.master.resources.limits.memory memory limit
-        memory: 3500m
+        memory: 3000Mi
     extraEnvVars:
     ## @param elasticsearch.master.extraEnvVars[0].name env
     - name: ELASTICSEARCH_ENABLE_REST_TLS
