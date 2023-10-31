@@ -3013,7 +3013,7 @@ console:
 elasticsearch:
   ## @param elasticsearch.enabled
   enabled: true
-  replicas: 0
+  replicas: 1
   # https://hub.docker.com/r/bitnami/elasticsearch/tags
   image:
     ## @param elasticsearch.image.repository
