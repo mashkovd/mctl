@@ -752,7 +752,7 @@ zeebe-gateway:
     ## @extra zeebe-gateway.ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
     tls:
       ## @param zeebe-gateway.ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
-      enabled: false
+      enabled: true
       ## @param zeebe-gateway.ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
       secretName: camunda-platform-zeebe-gateway
 
@@ -770,7 +770,7 @@ zeebe-gateway:
 ## @extra.operate configuration for the Operate sub chart.
 operate:
   ## @param operate.enabled if true, the Operate deployment and its related resources are deployed via a helm release
-  enabled: false
+  enabled: true
 
   ## @extra operate.image configuration to configure the Operate image specifics
   image:
@@ -980,7 +980,7 @@ operate:
 # Tasklist configuration for the tasklist sub chart.
 tasklist:
   ## @param tasklist.enabled if true, the tasklist deployment and its related resources are deployed via a helm release
-  enabled: false
+  enabled: true
 
   ## @extra tasklist.image configuration to configure the tasklist image specifics
   image:
@@ -1598,7 +1598,7 @@ identity:
     ## @extra identity.ingress.tls configuration for tls on the ingress resource https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
     tls:
       ## @param identity.ingress.tls.enabled if true, then tls is configured on the ingress resource. If enabled the Ingress.host need to be defined.
-      enabled: false
+      enabled: true
       ## @param identity.ingress.tls.secretName defines the secret name which contains the TLS private key and certificate
       secretName: camunda-platform-identity
   fullURL: "https://identity.mctl.ru"
@@ -1895,7 +1895,7 @@ identity:
       ## @param identity.keycloak.ingress.enabled can be used enable ingress record generation for Keycloak.
       enabled: true
       ## @param identity.keycloak.ingress.tls can be used to enable TLS configuration for the host defined at ingress.hostname parameter.
-      tls: false
+      tls: true
       ## @param identity.keycloak.ingress.extraTls configuration for additional hostnames to be covered with this ingress record.
       extraTls: []
       ## @param identity.keycloak.ingress.annotations [object] configures annotations to be applied to the ingress record.

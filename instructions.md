@@ -49,10 +49,13 @@ helm upgrade --install camunda camunda/camunda-platform --version $VERSION -n ca
 ```
 
 ```bash
-zbctl --insecure --address zeebe.mctl.ru:26500 status --clientId zeebe --clientSecret eZAtuz6ayY --authzUrl http://keycloak.mctl.ru/auth/realms/camunda-platform/protocol/openid-connect/token
-
-
+## !!! OPEN 26500 port
+export RELEASE_NAME=camunda
+export ZEEBE_SECRET=$(kubectl get secret "$RELEASE_NAME-zeebe-identity-secret" -o jsonpath="{.data.zeebe-secret}"   -n $RELEASE_NAME | base64 --decode)
+echo $ZEEBE_SECRET
+zbctl --insecure --address zeebe.mctl.ru:26500 status --clientId zeebe --clientSecret $ZEEBE_SECRET --authzUrl http://keycloak.mctl.ru/auth/realms/camunda-platform/protocol/openid-connect/token
 ```
+
 1. upgrade app by helm
 ```bash
 export VERSION=8.3.1
@@ -101,5 +104,13 @@ argocd login argocd.mctl.ru --username admin --password uzb5NsqQVEMOFjl3
 ```
 
 
-additional urls:
+## Additional urls:
 https://github.com/camunda/camunda-platform-helm/issues/917 (cannot patch "<deployment-name-here>-zeebe-gateway")
+
+
+## Delete terminated namespaces
+
+```bash
+export NAMESPACE=camunda
+kubectl get namespace $NAMESPACE -o json | sed 's/"kubernetes"//' | kubectl replace --raw "/api/v1/namespaces/$NAMESPACE/finalize" -f -
+```
