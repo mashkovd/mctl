@@ -550,8 +550,8 @@ zeebe-gateway:
     value: "zeebe-api"
   - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_IDENTITY_TYPE
     value: "keycloak"
-#  - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_IDENTITY_BASEURL
-#    value: "http://identity.mctl.ru"
+  - name: ZEEBE_GATEWAY_SECURITY_AUTHENTICATION_IDENTITY_BASEURL
+    value: "https://identity.mctl.ru"
 
   ## @extra zeebe-gateway.configMap configuration which will be applied to the mounted config map.
   configMap:
@@ -3013,7 +3013,7 @@ console:
 elasticsearch:
   ## @param elasticsearch.enabled
   enabled: true
-  replicas: 1
+  replicas: 0
   # https://hub.docker.com/r/bitnami/elasticsearch/tags
   image:
     ## @param elasticsearch.image.repository
@@ -3062,12 +3062,12 @@ elasticsearch:
         ## @param elasticsearch.master.resources.requests.cpu cpu request
         cpu: 1
         ## @param elasticsearch.master.resources.requests.memory request
-        memory: 2Gi
+        memory: 1Gi
       limits:
         ## @param elasticsearch.master.resources.limits.cpu cpu limit
-        cpu: 2
+        cpu: 2700Mi
         ## @param elasticsearch.master.resources.limits.memory memory limit
-        memory: 2Gi
+        memory: 3500m
     extraEnvVars:
     ## @param elasticsearch.master.extraEnvVars[0].name env
     - name: ELASTICSEARCH_ENABLE_REST_TLS
