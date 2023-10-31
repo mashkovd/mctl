@@ -12,6 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard-ingress
+  namespace: kubernetes-dashboard
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: dashboard.mctl.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubernetes-dashboard
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - dashboard.mctl.ru
+    secretName: dashboard.mctl.ru-tls
+
+---
+
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -42,6 +69,7 @@ spec:
       targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard
+  type: LoadBalancer
 
 ---
 
