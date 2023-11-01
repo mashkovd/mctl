@@ -1407,7 +1407,7 @@ identity:
     ## @param identity.firstUser.username defines the username of the first user, needed to log in into the web applications
     username: demo
     ## @param identity.firstUser.password defines the password of the first user, needed to log in into the web applications
-    password: demo
+    password: camunda2023
     ## @param identity.firstUser.email defines the email address of the first user; a valid email address is required to use Web Modeler
     email: demo@example.org
     ## @param identity.firstUser.firstName defines the first name of the first user; a name is required to use Web Modeler
