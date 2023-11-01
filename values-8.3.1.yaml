@@ -339,7 +339,7 @@ zeebe:
   ## @param zeebe.resources.limits.memory
   resources:
     requests:
-      cpu: 800m
+      cpu: 600m
       memory: 1200Mi
     limits:
       cpu: 960m
@@ -822,7 +822,7 @@ operate:
       cpu: 600m
       memory: 400Mi
     limits:
-      cpu: 2000m
+      cpu: 1000m
       memory: 2Gi
 
   ## @param operate.env can be used to set extra environment variables in each Operate container
@@ -3065,7 +3065,7 @@ elasticsearch:
         memory: 1Gi
       limits:
         ## @param elasticsearch.master.resources.limits.cpu cpu limit
-        cpu: 2500m
+        cpu: 2000m
         ## @param elasticsearch.master.resources.limits.memory memory limit
         memory: 3000Mi
     extraEnvVars:

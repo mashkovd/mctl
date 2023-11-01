@@ -166,7 +166,7 @@ module "kube-hetzner" {
     },
     {
       name        = "agent-large",
-      server_type = "cpx31",
+      server_type = "cx41",
       location    = "fsn1",
       labels      = ["node-type=app"],
       taints      = [],
