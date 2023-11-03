@@ -69,7 +69,7 @@ spec:
       targetPort: 8443
   selector:
     k8s-app: kubernetes-dashboard
-  type: LoadBalancer
+  type: ClusterIP
 
 ---
 
