@@ -806,7 +806,7 @@ operate:
   ## @extra operate.service configuration to configure the Operate service.
   service:
     ## @param operate.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: LoadBalancer
+    type: ClusterIP
     ## @param operate.service.port defines the port of the service, where the Operate web application will be available
     port: 80
     ## @param operate.service.annotations can be used to define annotations, which will be applied to the Operate service
@@ -1018,7 +1018,7 @@ tasklist:
   ## @extra tasklist.service configuration to configure the tasklist service.
   service:
     ## @param tasklist.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: LoadBalancer
+    type: ClusterIP
     ## @param tasklist.service.port defines the port of the service, where the tasklist web application will be available
     port: 80
 
@@ -1452,7 +1452,7 @@ identity:
   ## @extra identity.service configuration to configure the identity service.
   service:
     ## @param identity.service.type defines the type of the service https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-    type: LoadBalancer
+    type: ClusterIP
     ## @param identity.service.annotations can be used to define annotations, which will be applied to the identity service
     annotations: {}
     ## @param identity.service.port defines the port of the service on which the identity application will be available
@@ -1918,7 +1918,7 @@ identity:
       ## @param identity.keycloak.service.type can be set to change the service type.
       # We use clusterIP for keycloak service, since per default LoadBalancer is used, which is not supported on all cloud providers.
       # This might prevent scheduling of the service.
-      type: LoadBalancer
+      type: ClusterIP
     ## Keycloak authentication parameters
     ## ref: https://github.com/bitnami/bitnami-docker-keycloak#admin-credentials
     ##
