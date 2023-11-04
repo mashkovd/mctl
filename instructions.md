@@ -33,6 +33,9 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/a
 kubectl apply -f ServiceAccount.yaml
 kubectl apply -f ClusterRoleBinding.yaml
 ```
+```bash
+helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --version 6.0.8 -f kubernetes-dashboard-values.yaml
+```
 
 1. get user token
 
@@ -90,7 +93,7 @@ https://cert-manager.io/docs/installation/helm/
 
 ```bash
 helm repo add argo https://argoproj.github.io/argo-helm
-helm upgrade --install argocd argo/argo-cd --namespace argocd --create-namespace -f argocd-values.yaml
+helm upgrade --install argocd argo/argo-cd --namespace argocd --create-namespace -f argocd-values.yaml --version 5.49.0
  ```
 
 ```bash

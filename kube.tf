@@ -124,6 +124,8 @@ module "kube-hetzner" {
       taints      = [],
       count       = 1
       # swap_size   = "2G" # remember to add the suffix, examples: 512M, 1G
+      # zram_size   = "2G" # remember to add the suffix, examples: 512M, 1G
+      # kubelet_args = ["kube-reserved=cpu=100m,memory=200Mi,ephemeral-storage=1Gi", "system-reserved=cpu=memory=200Mi"]
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
@@ -270,6 +272,9 @@ module "kube-hetzner" {
   # have a look at the tag value in https://github.com/kubernetes/autoscaler/blob/master/charts/cluster-autoscaler/values.yaml
   # ⚠️ Based on how the autoscaler works with this project, you can only choose either x86 instances or ARM server types for ALL autoscaler nodepools.
   # If you are curious, it's ok to have a multi-architecture cluster, as most underlying container images are multi-architecture too.
+  #
+  # ⚠️ Setting labels and taints will only work on cluster-autoscaler images versions released after > 20 October 2023. Or images built from master after that date.
+  #
   # * Example below:
   # autoscaler_nodepools = [
   #   {
@@ -392,6 +397,7 @@ module "kube-hetzner" {
   # After the cluster is deployed, you can always use HelmChartConfig definition to tweak the configuration.
   # If you want to disable both controllers set this to "none"
   # ingress_controller = "nginx"
+  # ingress_target_namespace = "" // In which namespace to deploy the ingress controllers. Defaults to the ingress_controller variable, eg (nginx, traefik)
 
   # You can change the number of replicas for selected ingress controller here. The default 0 means autoselecting based on number of agent nodes (1 node = 1 replica, 2 nodes = 2 replicas, 3+ nodes = 3 replicas)
   # ingress_replica_count = 1
@@ -404,6 +410,7 @@ module "kube-hetzner" {
 
   # If you want to configure additional arguments for traefik, enter them here as a list and in the form of traefik CLI arguments; see https://doc.traefik.io/traefik/reference/static-configuration/cli/
   # They are the options that go into the additionalArguments section of the Traefik helm values file.
+  # We already add "providers.kubernetesingress.ingressendpoint.publishedservice" by default so that Traefik works automatically with services such as External-DNS and ArgoCD.
   # Example:
   traefik_additional_options = ["--log.level=DEBUG", "--tracing=true"]
 
@@ -534,6 +541,11 @@ module "kube-hetzner" {
   # Additional flags to pass to the k3s agent command (every agents nodes, including autoscaler nodepools).
   # k3s_exec_agent_args = "--kubelet-arg kube-reserved=cpu=100m,memory=200Mi,ephemeral-storage=1Gi"
 
+  # The vars below here passes it to the k3s config.yaml. This way it persist across reboots
+  # k3s_global_kubelet_args = ["kube-reserved=cpu=100m,ephemeral-storage=1Gi", "system-reserved=cpu=memory=200Mi", "image-gc-high-threshold=50", "image-gc-low-threshold=40"]
+  # k3s_control_plane_kubelet_args = []
+  # k3s_agent_kubelet_args = []
+
   # If you want to allow all outbound traffic you can set this to "false". Default is "true".
   # restrict_outbound_traffic = false
 
@@ -550,24 +562,24 @@ module "kube-hetzner" {
 
   # Adding extra firewall rules, like opening a port
   # More info on the format here https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/firewall
-  # extra_firewall_rules = [
-  #   {
-  #     description = "For Postgres"
-  #     direction       = "in"
-  #     protocol        = "tcp"
-  #     port            = "5432"
-  #     source_ips      = ["0.0.0.0/0", "::/0"]
-  #     destination_ips = [] # Won't be used for this rule
-  #   },
-  #   {
-  #     description = "To Allow ArgoCD access to resources via SSH"
-  #     direction       = "out"
-  #     protocol        = "tcp"
-  #     port            = "22"
-  #     source_ips      = [] # Won't be used for this rule
-  #     destination_ips = ["0.0.0.0/0", "::/0"]
-  #   }
-  # ]
+   extra_firewall_rules = [
+     {
+       description = "For Zeebe"
+       direction       = "in"
+       protocol        = "tcp"
+       port            = "26500"
+       source_ips      = ["0.0.0.0/0", "::/0"]
+       destination_ips = [] # Won't be used for this rule
+     },
+#     {
+#       description = "To Allow ArgoCD access to resources via SSH"
+#       direction       = "out"
+#       protocol        = "tcp"
+#       port            = "22"
+#       source_ips      = [] # Won't be used for this rule
+#       destination_ips = ["0.0.0.0/0", "::/0"]
+#     }
+   ]
 
   # If you want to configure a different CNI for k3s, use this flag
   # possible values: flannel (Default), calico, and cilium
@@ -880,7 +892,44 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = ">= 1.43.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.23.0"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "2.11.0"
+    }
   }
+}
+
+provider "kubernetes" {
+  host                   = module.kube-hetzner.kubeconfig_data.host
+  client_certificate     = module.kube-hetzner.kubeconfig_data.client_certificate
+  client_key             = module.kube-hetzner.kubeconfig_data.client_key
+  cluster_ca_certificate = module.kube-hetzner.kubeconfig_data.cluster_ca_certificate
+}
+
+provider "helm" {
+  kubernetes {
+    host                   = module.kube-hetzner.kubeconfig_data.host
+    client_certificate     = module.kube-hetzner.kubeconfig_data.client_certificate
+    client_key             = module.kube-hetzner.kubeconfig_data.client_key
+    cluster_ca_certificate = module.kube-hetzner.kubeconfig_data.cluster_ca_certificate
+  }
+}
+
+module "cluster-bootstrap" {
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+  source = "./cluster-bootstrap"
+  depends_on = [
+    module.kube-hetzner
+  ]
+
+  # <variables here>
 }
 
 output "kubeconfig" {
@@ -892,3 +941,4 @@ variable "hcloud_token" {
   sensitive = true
   default   = ""
 }
+
