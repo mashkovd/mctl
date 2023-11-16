@@ -60,7 +60,7 @@ helm uninstall camunda -n camunda && kubectl delete ns camunda
 export RELEASE_NAME=camunda
 export ZEEBE_SECRET=$(kubectl get secret "$RELEASE_NAME-zeebe-identity-secret" -o jsonpath="{.data.zeebe-secret}"   -n $RELEASE_NAME | base64 --decode)
 echo $ZEEBE_SECRET
-zbctl --insecure --address zeebe.mctl.ru:26500 status --clientId zeebe --clientSecret $ZEEBE_SECRET --authzUrl http://keycloak.mctl.ru/auth/realms/camunda-platform/protocol/openid-connect/token
+zbctl --insecure --address zeebe.mctl.ru:26500 status --clientId zeebe --clientSecret $ZEEBE_SECRET --authzUrl https://keycloak.mctl.ru/auth/realms/camunda-platform/protocol/openid-connect/token
 ```
 
 1. upgrade app by helm

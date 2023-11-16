@@ -12,6 +12,33 @@ resource "helm_release" "argocd" {
   ]
 }
 
+resource "helm_release" "kubernetes-dashboard" {
+  name             = "kubernetes-dashboard"
+  repository       = "https://kubernetes.github.io/dashboard"
+  chart            = "kubernetes-dashboard"
+  version          = "6.0.8"
+  namespace        = "kubernetes-dashboard"
+  create_namespace = true
+  wait             = false
+  wait_for_jobs    = false
+  values           = [
+    "${file("cluster-bootstrap/helm-values/kubernetes-dashboard.yaml")}"
+  ]
+}
+
+#resource "helm_release" "gitlab" {
+#  name             = "gitlab"
+#  repository       = "https://charts.gitlab.io/"
+#  chart            = "gitlab"
+#  version          = "7.1.2"
+#  namespace        = "gitlab"
+#  create_namespace = true
+#  wait             = true
+#  wait_for_jobs    = false
+#  values           = [
+#    "${file("cluster-bootstrap/helm-values/gitlab.yaml")}"
+#  ]
+#}
 
 variable "camunda-appname" {
   type    = string
