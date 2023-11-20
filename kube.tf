@@ -119,7 +119,7 @@ module "kube-hetzner" {
     {
       name        = "control-plane-fsn1",
       server_type = "cpx11",
-      location    = "fsn1",
+      location    = "nbg1",
       labels      = ["node-type=control-node"],
       taints      = [],
       count       = 1
@@ -158,7 +158,7 @@ module "kube-hetzner" {
     {
       name        = "agent-small",
       server_type = "cpx21",
-      location    = "fsn1",
+      location    = "nbg1",
       labels      = ["node-type=app"],
       taints      = [],
       count       = 0
@@ -170,7 +170,7 @@ module "kube-hetzner" {
       name        = "agent-large",
       server_type = "cpx31",
 #      server_type = "cx41",
-      location    = "fsn1",
+      location    = "nbg1",
       labels      = ["node-type=app"],
       taints      = [],
       count       = 1
@@ -571,6 +571,14 @@ module "kube-hetzner" {
        port            = "26500"
        source_ips      = ["0.0.0.0/0", "::/0"]
        destination_ips = [] # Won't be used for this rule
+     },
+          {
+       description = "For Kafka"
+       direction       = "out"
+       protocol        = "tcp"
+       port            = "9094"
+       source_ips      = [] # Won't be used for this rule
+       destination_ips = ["0.0.0.0/0", "::/0"]
      },
 #     {
 #       description = "To Allow ArgoCD access to resources via SSH"

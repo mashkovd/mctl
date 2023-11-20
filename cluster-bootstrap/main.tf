@@ -123,27 +123,34 @@ resource "helm_release" "camunda-platform" {
   ]
   set {
     name  = "global.identity.auth.tasklist.existingSecret"
-    value = data.external.tasklist_secret.result["value"]
+#    value = data.external.tasklist_secret.result["value"]
+    value = data.external.tasklist_secret.result != null ? data.external.tasklist_secret.result["value"] : "tasklist_secret"
+
   }
   set {
     name  = "global.identity.auth.optimize.existingSecret"
-    value = data.external.optimize_secret.result["value"]
+#    value = data.external.optimize_secret.result["value"]
+        value = data.external.optimize_secret.result !=  null ? data.external.optimize_secret.result["value"] : "optimize_secret"
   }
   set {
     name  = "global.identity.auth.operate.existingSecret"
-    value = data.external.operate_secret.result["value"]
+#    value = data.external.operate_secret.result["value"]
+           value = data.external.operate_secret.result !=  null ? data.external.operate_secret.result["value"] : "operate_secret"
   }
   set {
     name  = "global.identity.auth.connectors.existingSecret"
-    value = data.external.connectors_secret.result["value"]
+#    value = data.external.connectors_secret.result["value"]
+               value = data.external.connectors_secret.result !=  null ? data.external.connectors_secret.result["value"] : "connectors_secret"
   }
   set {
     name  = "global.identity.auth.zeebe.existingSecret"
-    value = data.external.zeebe_secret.result["value"]
+#    value = data.external.zeebe_secret.result["value"]
+    value = data.external.zeebe_secret.result !=  null ? data.external.zeebe_secret.result["value"] : "zeebe_secret"
   }
   set {
     name  = "identity.keycloak.auth.adminPassword"
-    value = data.external.keycloak_admin_secret.result["value"]
+#    value = data.external.keycloak_admin_secret.result["value"]
+    value = data.external.keycloak_admin_secret.result !=  null ? data.external.keycloak_admin_secret.result["value"] : "keycloak_admin_secret"
   }
 #  set {
 #    name  = "identity.keycloak.auth.managementPassword"
@@ -151,11 +158,13 @@ resource "helm_release" "camunda-platform" {
 #  }
   set {
     name  = "identity.keycloak.postgresql.auth.password"
-    value = data.external.postgresql_secret.result["value"]
+#    value = data.external.postgresql_secret.result["value"]
+    value = data.external.postgresql_secret.result !=  null ? data.external.postgresql_secret.result["value"] : "postgresql_secret"
   }
     set {
     name  = "global.identity.auth.console.existingSecret"
-    value = data.external.postgresql_secret.result["value"]
+#    value = data.external.console_secret.result["value"]
+      value = data.external.console_secret.result !=  null ? data.external.console_secret.result["value"] : "console_secret"
   }
 }
 
