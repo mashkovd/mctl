@@ -169,7 +169,7 @@ module "kube-hetzner" {
       location    = "nbg1",
       labels      = ["node-type=app"],
       taints      = [],
-      count       = 1
+      count       = 2
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
