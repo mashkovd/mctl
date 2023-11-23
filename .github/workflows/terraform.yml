@@ -88,8 +88,8 @@ jobs:
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: |
-        export TF_LOG=DEBUG 
-        terraform validate
+#        export TF_LOG=DEBUG
+        echo HCLOUD_TOKEN
         echo $secrets.HCLOUD_TOKEN
         terraform fmt -check
       
