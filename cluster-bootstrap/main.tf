@@ -1,16 +1,16 @@
-resource "helm_release" "argocd" {
-  name             = "argocd"
-  repository       = "https://argoproj.github.io/argo-helm"
-  chart            = "argo-cd"
-  version          = "5.49.0"
-  namespace        = "argocd"
-  create_namespace = true
-  wait             = false
-  wait_for_jobs    = false
-  values           = [
-    "${file("cluster-bootstrap/helm-values/argocd.yaml")}"
-  ]
-}
+#resource "helm_release" "argocd" {
+#  name             = "argocd"
+#  repository       = "https://argoproj.github.io/argo-helm"
+#  chart            = "argo-cd"
+#  version          = "5.49.0"
+#  namespace        = "argocd"
+#  create_namespace = true
+#  wait             = false
+#  wait_for_jobs    = false
+#  values           = [
+#    "${file("cluster-bootstrap/helm-values/argocd.yaml")}"
+#  ]
+#}
 
 #resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
