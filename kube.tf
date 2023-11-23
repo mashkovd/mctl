@@ -51,7 +51,7 @@ module "kube-hetzner" {
   # If you want to use an ssh key that is already registered within hetzner cloud, you can pass its id.
   # If no id is passed, a new ssh key will be registered within hetzner cloud.
   # It is important that exactly this key is passed via `ssh_public_key` & `ssh_private_key` variables.
-  # hcloud_ssh_key_id = ""
+  hcloud_ssh_key_id = "CI"
 
   # These can be customized, or left with the default values
   # * For Hetzner locations see https://docs.hetzner.com/general/others/data-centers-and-connection/
