@@ -4,7 +4,7 @@ locals {
   # If you choose to define it in the shell, this can be left as is.
 
   # Your Hetzner token can be found in your Project > Security > API Token (Read & Write is required).
-  hcloud_token = "hcloud_token" # or ""
+  hcloud_token = "hcloud_token"
 }
 
 module "kube-hetzner" {
