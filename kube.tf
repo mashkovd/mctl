@@ -1,14 +1,10 @@
-data "external" "bash_command" {
-  program = ["bash", "-c", "kwallet-query -f token -r hcloud_token kdewallet"] # Replace with your actual bash command
-}
-
 locals {
   # You have the choice of setting your Hetzner API token here or define the TF_VAR_hcloud_token env
   # within your shell, such as such: export TF_VAR_hcloud_token=xxxxxxxxxxx
   # If you choose to define it in the shell, this can be left as is.
 
   # Your Hetzner token can be found in your Project > Security > API Token (Read & Write is required).
-  hcloud_token = data.external.bash_command.result.hcloud_token
+  hcloud_token = "hcloud_token" # or ""
 }
 
 module "kube-hetzner" {
