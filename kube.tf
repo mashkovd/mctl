@@ -169,7 +169,7 @@ module "kube-hetzner" {
       location    = "nbg1",
       labels      = ["node-type=app"],
       taints      = [],
-      count       = 2
+      count       = 1
 
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
@@ -717,7 +717,7 @@ module "kube-hetzner" {
   # See https://github.com/kube-hetzner/terraform-hcloud-kube-hetzner/issues/349
   # When "false". The kubeconfig file can instead be created by executing: "terraform output --raw kubeconfig > cluster_kubeconfig.yaml"
   # Always be careful to not commit this file!
-  # create_kubeconfig = false
+  create_kubeconfig = false
 
   # Don't create the kustomize backup. This can be helpful for automation.
   # create_kustomization = false
