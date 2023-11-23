@@ -1911,7 +1911,7 @@ server:
     enabled: true
     # -- Additional ingress annotations
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-staging
+      cert-manager.io/cluster-issuer: letsencrypt-prod
     # -- Additional ingress labels
     labels: {}
     # -- Defines which ingress controller will implement the resource
