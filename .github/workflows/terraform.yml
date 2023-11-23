@@ -77,8 +77,8 @@ jobs:
     - name: Set up SSH keys
       run: |
         mkdir -p ~/.ssh
-        echo "$secrets.SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-        echo "$secrets.SSH_PUBLIC_KEY" > ~/.ssh/id_ed25519.pub
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+        echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_ed25519.pub
         chmod 600 ~/.ssh/id_ed25519
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
@@ -88,9 +88,8 @@ jobs:
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: |
-#        export TF_LOG=DEBUG
         echo HCLOUD_TOKEN
-        echo $secrets.HCLOUD_TOKEN
+        echo ${{ secrets.HCLOUD_TOKEN }}
         terraform fmt -check
       
 
