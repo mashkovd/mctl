@@ -83,7 +83,7 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init
+      run: terraform init  --upgrade
 
 
     # Generates an execution plan for Terraform
@@ -102,4 +102,4 @@ jobs:
         echo start apply
         echo github.ref
         echo github.event_name
-        terraform apply -auto-approve -input=false
+        terraform apply -auto-approve
