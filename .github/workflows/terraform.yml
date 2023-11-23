@@ -53,6 +53,7 @@ on:
 permissions:
   contents: read
 
+
 jobs:
   terraform:
     name: 'Terraform'
