@@ -980,7 +980,7 @@ operate:
 # Tasklist configuration for the tasklist sub chart.
 tasklist:
   ## @param tasklist.enabled if true, the tasklist deployment and its related resources are deployed via a helm release
-  enabled: false
+  enabled: true
 
   ## @extra tasklist.image configuration to configure the tasklist image specifics
   image:
