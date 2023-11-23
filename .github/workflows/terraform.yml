@@ -88,6 +88,8 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
+      env:
+        TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
       run: |
         terraform plan -input=false
 
