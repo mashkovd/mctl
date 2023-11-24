@@ -2,7 +2,6 @@
 ## Ref: https://github.com/argoproj/argo-cd
 ##
 
-
 # -- Provide a name in place of `argocd`
 nameOverride: argocd
 # -- String to fully override `"argo-cd.fullname"`
@@ -240,7 +239,7 @@ configs:
 
     ## Server properties
     # -- Run server without TLS
-    server.insecure: true
+    server.insecure: false
     # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
     server.basehref: /
     # -- Used if Argo CD is running behind reverse proxy under subpath different from /
@@ -476,8 +475,8 @@ configs:
   ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
   repositories:
      istio-helm-repo:
-       url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
-       name: istio.io
+       url: https://github.com/mashkovd/FlowMaster/tree/master/chart
+       name: FlowMaster
        type: helm
     # private-helm-repo:
     #   url: https://my-private-chart-repo.internal
