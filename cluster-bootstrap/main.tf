@@ -8,7 +8,7 @@ resource "helm_release" "argocd" {
   wait             = true
   wait_for_jobs    = true
   values           = [
-    "${file("cluster-bootstrap/helm-values/argocd.yaml")}"
+    file("${path.module}/helm-values/argocd.yaml")
   ]
 }
 
