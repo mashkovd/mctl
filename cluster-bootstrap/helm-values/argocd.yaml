@@ -485,7 +485,8 @@ configs:
     #   password: my-password
     #   username: my-username
      private-repo:
-       url: https://github.com/mashkovd/argocdApp.git
+       url: https://github.com/mashkovd/argocdApps.git
+       type: git
 
   # -- Annotations to be added to `configs.repositories` Secret
   repositoriesAnnotations: {}
@@ -2412,6 +2413,24 @@ repoServer:
   #     - list
   #     - watch
 
+
+applications:
+  - name: my-app
+    source:
+      repoURL: 'https://github.com/mashkovd/argocdApps.git'
+      path: 'apps'
+      targetRevision: 'HEAD'
+    destination:
+      server: 'https://kubernetes.default.svc'
+      namespace: 'my-namespace'
+    project: default
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
+      syncOptions:
+        - CreateNamespace=true
+        - Validate=false
 ## ApplicationSet controller
 applicationSet:
   # -- Enable ApplicationSet controller
