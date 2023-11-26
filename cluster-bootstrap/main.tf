@@ -12,6 +12,20 @@ resource "helm_release" "argocd" {
   ]
 }
 
+resource "helm_release" "root-app" {
+  name             = "root-app"
+  repository       = "https://github.com/mashkovd/argocdApps.git"
+  chart            = "apps"
+  version          = "0.1.0"
+  namespace        = "apps"
+  create_namespace = true
+  wait             = true
+  wait_for_jobs    = true
+  values           = [
+    file("${path.module}/helm-values/argocd.yaml")
+  ]
+}
+
 #resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
 #  repository       = "https://kubernetes.github.io/dashboard"

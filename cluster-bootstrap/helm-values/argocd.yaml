@@ -473,7 +473,7 @@ configs:
   # -- Repositories list to be used by applications
   ## Creates a secret for each key/value specified below to create repositories
   ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
-  repositories:
+  repositories: {}
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
     #   name: istio.io
@@ -484,9 +484,8 @@ configs:
     #   type: helm
     #   password: my-password
     #   username: my-username
-     private-repo:
-       url: https://github.com/mashkovd/argocdApps.git
-       type: git
+    # private-repo:
+    #   url: https://github.com/argoproj/private-repo
 
   # -- Annotations to be added to `configs.repositories` Secret
   repositoriesAnnotations: {}
@@ -2413,24 +2412,6 @@ repoServer:
   #     - list
   #     - watch
 
-
-applications:
-  - name: my-app
-    source:
-      repoURL: 'https://github.com/mashkovd/argocdApps.git'
-      path: 'apps'
-      targetRevision: 'HEAD'
-    destination:
-      server: 'https://kubernetes.default.svc'
-      namespace: 'my-namespace'
-    project: default
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-      syncOptions:
-        - CreateNamespace=true
-        - Validate=false
 ## ApplicationSet controller
 applicationSet:
   # -- Enable ApplicationSet controller
