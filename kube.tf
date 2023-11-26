@@ -928,9 +928,10 @@ provider "helm" {
 }
 provider "argocd" {
   # ArgoCD server details
-  server_addr = "https://argocd.mctl.ru"
+  server_addr = "https://argocd.mctl.ru:443"
   username    = "admin"
   password    = var.argo_cd_password
+  insecure = true
   # Note: It's recommended to use a more secure method for secret management in production.
 }
 
