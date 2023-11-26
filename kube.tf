@@ -34,10 +34,10 @@ module "kube-hetzner" {
   # ssh_port = 2222
 
   # * Your ssh public key
-  ssh_public_key  = var.ssh_public_key != "" ? var.ssh_public_key : try(file("~/.ssh/id_ed25519.pub"), null)
+  ssh_public_key  = var.ssh_public_key
   # * Your private key must be "ssh_private_key = null" when you want to use ssh-agent for a Yubikey-like device authentication or an SSH key-pair with a passphrase.
   # For more details on SSH see https://github.com/kube-hetzner/kube-hetzner/blob/master/docs/ssh.md
-  ssh_private_key = var.ssh_private_key != "" ? var.ssh_private_key : try(file("~/.ssh/id_ed25519"), null)
+  ssh_private_key = var.ssh_private_key
   # You can add additional SSH public Keys to grant other team members root access to your cluster nodes.
   # ssh_additional_public_keys = []
 
