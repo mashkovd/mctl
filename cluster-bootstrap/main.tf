@@ -12,20 +12,40 @@ resource "helm_release" "argocd" {
   ]
 }
 
-resource "helm_release" "root-app" {
-  name             = "root-app"
-  repository       = "https://github.com/mashkovd/argocdApps.git"
-  chart            = "apps"
-  version          = "0.1.0"
-  namespace        = "apps"
-  create_namespace = true
-  wait             = true
-  wait_for_jobs    = true
-  values           = [
-    file("${path.module}/helm-values/argocd.yaml")
-  ]
+# Create an application which in turn applies the ArgoCD files
+# from the config repo.
+resource "kubectl_manifest" "application_argo_config" {
+  yaml_body = yamlencode({
+    apiVersion = "argoproj.io/v1alpha1"
+    kind       = "Application"
+    metadata   = {
+      name      = "argo-config"
+      namespace = "apps"
+    }
+    spec = {
+      destination = {
+        # This parameter should be changed in case applications should be
+        # deployed to an external cluster.
+        # External clusters need to be registered beforehand
+        server = "https://kubernetes.default.svc"
+      }
+      project = "default"
+      sources = [
+        {
+          path           = "apps"
+          repoURL        = "https://github.com/mashkovd/argocdApps.git"
+          targetRevision = "main"
+        }
+      ],
+      syncPolicy = {
+        automated = {
+          prune    = true
+          selfHeal = false
+        }
+      }
+    }
+  })
 }
-
 #resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
 #  repository       = "https://kubernetes.github.io/dashboard"
@@ -189,6 +209,10 @@ terraform {
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.16"
+    }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "1.14.0"
     }
     helm = {
       source  = "hashicorp/helm"
