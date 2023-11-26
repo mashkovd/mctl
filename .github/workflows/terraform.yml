@@ -89,10 +89,10 @@ jobs:
         cat > backend.tf << EOF
         terraform {
           backend "remote" {
-            organization = "${secrets.TF_CLOUD_ORGANIZATION}"
+            organization = "${{ secrets.TF_CLOUD_ORGANIZATION }}"
 
             workspaces {
-              name = "${secrets.TF_CLOUD_WORKSPACE}"
+              name = "${{ secrets.TF_CLOUD_WORKSPACE }}"
             }
           }
         }
