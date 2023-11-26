@@ -12,40 +12,6 @@ resource "helm_release" "argocd" {
   ]
 }
 
-# Create an application which in turn applies the ArgoCD files
-# from the config repo.
-resource "kubectl_manifest" "application_argo_config" {
-  yaml_body = yamlencode({
-    apiVersion = "argoproj.io/v1alpha1"
-    kind       = "Application"
-    metadata   = {
-      name      = "argo-config"
-      namespace = "apps"
-    }
-    spec = {
-      destination = {
-        # This parameter should be changed in case applications should be
-        # deployed to an external cluster.
-        # External clusters need to be registered beforehand
-        server = "https://kubernetes.default.svc"
-      }
-      project = "default"
-      sources = [
-        {
-          path           = "apps"
-          repoURL        = "https://github.com/mashkovd/argocdApps.git"
-          targetRevision = "main"
-        }
-      ],
-      syncPolicy = {
-        automated = {
-          prune    = true
-          selfHeal = false
-        }
-      }
-    }
-  })
-}
 #resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
 #  repository       = "https://kubernetes.github.io/dashboard"
@@ -77,6 +43,11 @@ resource "kubectl_manifest" "application_argo_config" {
 variable "camunda-appname" {
   type    = string
   default = "camunda"
+}
+
+variable "argo_cd_password" {
+  sensitive = true
+  default   = ""
 }
 
 data "external" "tasklist_secret" {
@@ -157,48 +128,48 @@ resource "helm_release" "camunda-platform" {
   ]
   set {
     name  = "global.identity.auth.tasklist.existingSecret"
-#    value = data.external.tasklist_secret.result["value"]
+    #    value = data.external.tasklist_secret.result["value"]
     value = data.external.tasklist_secret.result != null ? data.external.tasklist_secret.result["value"] : "tasklist_secret"
 
   }
   set {
     name  = "global.identity.auth.optimize.existingSecret"
-#    value = data.external.optimize_secret.result["value"]
-        value = data.external.optimize_secret.result !=  null ? data.external.optimize_secret.result["value"] : "optimize_secret"
+    #    value = data.external.optimize_secret.result["value"]
+    value = data.external.optimize_secret.result !=  null ? data.external.optimize_secret.result["value"] : "optimize_secret"
   }
   set {
     name  = "global.identity.auth.operate.existingSecret"
-#    value = data.external.operate_secret.result["value"]
-           value = data.external.operate_secret.result !=  null ? data.external.operate_secret.result["value"] : "operate_secret"
+    #    value = data.external.operate_secret.result["value"]
+    value = data.external.operate_secret.result !=  null ? data.external.operate_secret.result["value"] : "operate_secret"
   }
   set {
     name  = "global.identity.auth.connectors.existingSecret"
-#    value = data.external.connectors_secret.result["value"]
-               value = data.external.connectors_secret.result !=  null ? data.external.connectors_secret.result["value"] : "connectors_secret"
+    #    value = data.external.connectors_secret.result["value"]
+    value = data.external.connectors_secret.result !=  null ? data.external.connectors_secret.result["value"] : "connectors_secret"
   }
   set {
     name  = "global.identity.auth.zeebe.existingSecret"
-#    value = data.external.zeebe_secret.result["value"]
+    #    value = data.external.zeebe_secret.result["value"]
     value = data.external.zeebe_secret.result !=  null ? data.external.zeebe_secret.result["value"] : "zeebe_secret"
   }
   set {
     name  = "identity.keycloak.auth.adminPassword"
-#    value = data.external.keycloak_admin_secret.result["value"]
+    #    value = data.external.keycloak_admin_secret.result["value"]
     value = data.external.keycloak_admin_secret.result !=  null ? data.external.keycloak_admin_secret.result["value"] : "keycloak_admin_secret"
   }
-#  set {
-#    name  = "identity.keycloak.auth.managementPassword"
-#    value = data.external.keycloak_management_secret.result["value"]
-#  }
+  #  set {
+  #    name  = "identity.keycloak.auth.managementPassword"
+  #    value = data.external.keycloak_management_secret.result["value"]
+  #  }
   set {
     name  = "identity.keycloak.postgresql.auth.password"
-#    value = data.external.postgresql_secret.result["value"]
+    #    value = data.external.postgresql_secret.result["value"]
     value = data.external.postgresql_secret.result !=  null ? data.external.postgresql_secret.result["value"] : "postgresql_secret"
   }
-    set {
+  set {
     name  = "global.identity.auth.console.existingSecret"
-#    value = data.external.console_secret.result["value"]
-      value = data.external.console_secret.result !=  null ? data.external.console_secret.result["value"] : "console_secret"
+    #    value = data.external.console_secret.result["value"]
+    value = data.external.console_secret.result !=  null ? data.external.console_secret.result["value"] : "console_secret"
   }
 }
 
@@ -210,13 +181,40 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.16"
     }
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "1.14.0"
-    }
     helm = {
       source  = "hashicorp/helm"
       version = ">= 2.9.0"
+    }
+    argocd = {
+      source  = "argoproj/argocd"
+      version = ">= 2.0.0"
+    }
+  }
+}
+
+provider "argocd" {
+  # ArgoCD server details
+  server_address = "https://argocd.mctl.ru"
+  username       = "admin"
+  password       = var.argo_cd_password
+  # Note: It's recommended to use a more secure method for secret management in production.
+}
+
+resource "argocd_application" "root-app" {
+  metadata {
+    name = "root-app"
+    namespace = "argocd"
+  }
+
+  spec {
+    project = "default"
+    source {
+      path    = "apps"
+      repo_url = "https://github.com/mashkovd/argocdApps.git"
+    }
+    destination {
+      server    = "https://kubernetes.default.svc"
+      namespace = "argocd"
     }
   }
 }
