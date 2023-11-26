@@ -5,6 +5,10 @@ locals {
 
   # Your Hetzner token can be found in your Project > Security > API Token (Read & Write is required).
   hcloud_token = "hcloud_token"
+
+  default_ssh_public_key  = try(file("~/.ssh/id_ed25519.pub"), null)
+  default_ssh_private_key = try(file("~/.ssh/id_ed25519"), null)
+
 }
 
 module "kube-hetzner" {
@@ -34,10 +38,10 @@ module "kube-hetzner" {
   # ssh_port = 2222
 
   # * Your ssh public key
-  ssh_public_key  = var.ssh_public_key
+  ssh_public_key  = var.ssh_public_key != "" ? var.ssh_public_key : local.default_ssh_public_key
   # * Your private key must be "ssh_private_key = null" when you want to use ssh-agent for a Yubikey-like device authentication or an SSH key-pair with a passphrase.
   # For more details on SSH see https://github.com/kube-hetzner/kube-hetzner/blob/master/docs/ssh.md
-  ssh_private_key = var.ssh_private_key
+  ssh_private_key = var.ssh_private_key != "" ? var.ssh_private_key : local.default_ssh_private_key
   # You can add additional SSH public Keys to grant other team members root access to your cluster nodes.
   # ssh_additional_public_keys = []
 
@@ -165,7 +169,6 @@ module "kube-hetzner" {
     {
       name        = "agent-large",
       server_type = "cpx31",
-#      server_type = "cx41",
       location    = "nbg1",
       labels      = ["node-type=app"],
       taints      = [],
@@ -559,32 +562,32 @@ module "kube-hetzner" {
 
   # Adding extra firewall rules, like opening a port
   # More info on the format here https://registry.terraform.io/providers/hetznercloud/hcloud/latest/docs/resources/firewall
-   extra_firewall_rules = [
-     {
-       description = "For Zeebe"
-       direction       = "in"
-       protocol        = "tcp"
-       port            = "26500"
-       source_ips      = ["0.0.0.0/0", "::/0"]
-       destination_ips = [] # Won't be used for this rule
-     },
-          {
-       description = "For Kafka"
-       direction       = "out"
-       protocol        = "tcp"
-       port            = "9094"
-       source_ips      = [] # Won't be used for this rule
-       destination_ips = ["0.0.0.0/0", "::/0"]
-     },
-#     {
-#       description = "To Allow ArgoCD access to resources via SSH"
-#       direction       = "out"
-#       protocol        = "tcp"
-#       port            = "22"
-#       source_ips      = [] # Won't be used for this rule
-#       destination_ips = ["0.0.0.0/0", "::/0"]
-#     }
-   ]
+  extra_firewall_rules = [
+    {
+      description     = "For Zeebe"
+      direction       = "in"
+      protocol        = "tcp"
+      port            = "26500"
+      source_ips      = ["0.0.0.0/0", "::/0"]
+      destination_ips = [] # Won't be used for this rule
+    },
+    {
+      description     = "For Kafka"
+      direction       = "out"
+      protocol        = "tcp"
+      port            = "9094"
+      source_ips      = [] # Won't be used for this rule
+      destination_ips = ["0.0.0.0/0", "::/0"]
+    },
+    #     {
+    #       description = "To Allow ArgoCD access to resources via SSH"
+    #       direction       = "out"
+    #       protocol        = "tcp"
+    #       port            = "22"
+    #       source_ips      = [] # Won't be used for this rule
+    #       destination_ips = ["0.0.0.0/0", "::/0"]
+    #     }
+  ]
 
   # If you want to configure a different CNI for k3s, use this flag
   # possible values: flannel (Default), calico, and cilium
@@ -905,6 +908,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "2.11.0"
     }
+    argocd = {
+      source  = "oboukili/argocd"
+      version = ">= 6.0.3"
+    }
   }
 }
 
@@ -923,13 +930,21 @@ provider "helm" {
     cluster_ca_certificate = module.kube-hetzner.kubeconfig_data.cluster_ca_certificate
   }
 }
+provider "argocd" {
+  # ArgoCD server details
+  server_addr = "https://argocd.mctl.ru"
+  username    = "admin"
+  password    = var.argo_cd_password
+  # Note: It's recommended to use a more secure method for secret management in production.
+}
+
 
 module "cluster-bootstrap" {
   providers = {
     kubernetes = kubernetes
     helm       = helm
   }
-  source = "./cluster-bootstrap"
+  source     = "./cluster-bootstrap"
   depends_on = [
     module.kube-hetzner
   ]
@@ -955,4 +970,8 @@ variable "ssh_private_key" {
 variable "ssh_public_key" {
   sensitive = true
   default   = ""
+}
+
+variable "argo_cd_password" {
+  sensitive = true
 }
