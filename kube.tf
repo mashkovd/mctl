@@ -666,12 +666,12 @@ module "kube-hetzner" {
       destination_ips = ["0.0.0.0/0", "::/0"]
     },
     {
-      description = "For Postgres"
+      description     = "For Postgres"
       direction       = "out"
       protocol        = "tcp"
       port            = "5432"
-      source_ips      = []
-      destination_ips = [] # Won't be used for this rule
+      source_ips      = [] # Won't be used for this rule
+      destination_ips = ["0.0.0.0/0", "::/0"]
     },
   #   {
   #     description = "To Allow ArgoCD access to resources via SSH"
