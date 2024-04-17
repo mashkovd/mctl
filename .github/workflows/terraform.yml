@@ -90,10 +90,10 @@ jobs:
         echo ${{ secrets.TF_CLOUD_ORGANIZATION }}        
         terraform {
           backend "remote" {
-            organization = "${{ secrets.TF_CLOUD_ORGANIZATION }}"
+            organization = "mctl"
 
             workspaces {
-              name = "${{ secrets.TF_CLOUD_WORKSPACE }}"
+              name = "mctl"
             }
           }
         }
