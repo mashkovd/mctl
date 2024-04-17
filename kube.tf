@@ -1,3 +1,13 @@
+terraform {
+  cloud {
+    organization = "mctl"
+
+    workspaces {
+      name = "mctl"
+    }
+  }
+}
+
 locals {
   # You have the choice of setting your Hetzner API token here or define the TF_VAR_hcloud_token env
   # within your shell, such as: export TF_VAR_hcloud_token=xxxxxxxxxxx
@@ -667,7 +677,7 @@ module "kube-hetzner" {
     },
     {
       description = "For Postgres"
-      direction       = "ou"
+      direction       = "out"
       protocol        = "tcp"
       port            = "5432"
       source_ips      = ["0.0.0.0/0", "::/0"]
