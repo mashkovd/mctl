@@ -670,7 +670,7 @@ module "kube-hetzner" {
       direction       = "out"
       protocol        = "tcp"
       port            = "5432"
-      source_ips      = ["0.0.0.0/0", "::/0"]
+      source_ips      = []
       destination_ips = [] # Won't be used for this rule
     },
   #   {
