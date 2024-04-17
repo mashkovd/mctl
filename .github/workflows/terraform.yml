@@ -87,6 +87,7 @@ jobs:
       id: backend
       run: |
         cat > backend.tf << EOF
+        
         terraform {
           backend "remote" {
             organization = "mctl"
