@@ -54,7 +54,7 @@ module "kube-hetzner" {
   # For more details on SSH see https://github.com/kube-hetzner/kube-hetzner/blob/master/docs/ssh.md
   ssh_private_key = coalesce(
     length(var.ssh_private_key) > 0 ? var.ssh_private_key : null,
-    fileexists("~/.ssh/libertex") ? file("~/.ssh/libertex") : null
+    fileexists("~/.ssh/id_ed25519") ? file("~/.ssh/id_ed25519") : null
   )
   # You can add additional SSH public Keys to grant other team members root access to your cluster nodes.
   # ssh_additional_public_keys = []
