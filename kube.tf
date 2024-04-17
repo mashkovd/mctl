@@ -1,12 +1,12 @@
-terraform {
-  cloud {
-    organization = "mctl"
-
-    workspaces {
-      name = "mctl"
-    }
-  }
-}
+# terraform {
+#   cloud {
+#     organization = "mctl"
+#
+#     workspaces {
+#       name = "mctl"
+#     }
+#   }
+# }
 
 locals {
   # You have the choice of setting your Hetzner API token here or define the TF_VAR_hcloud_token env
