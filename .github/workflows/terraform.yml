@@ -87,7 +87,7 @@ jobs:
       id: backend
       run: |
         cat > backend.tf << EOF
-        echo ${{ secrets.TF_CLOUD_ORGANIZATION }}        
+    
         terraform {
           backend "remote" {
             organization = "mctl"
