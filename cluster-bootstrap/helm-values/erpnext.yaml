@@ -241,8 +241,8 @@ persistence:
 # Ingress
 ingress:
   # ingressName: ""
-  # className: ""
-  enabled: false
+  className: "traefik"
+  enabled: true
   annotations:
     kubernetes.io/ingress.class: traefik
     kubernetes.io/tls-acme: "true"
