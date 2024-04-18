@@ -180,7 +180,7 @@ module "kube-hetzner" {
       location    = "fsn1",
       labels      = [],
       taints      = [],
-      count       = 1
+      count       = 0
       # swap_size   = "2G" # remember to add the suffix, examples: 512M, 1G
       # zram_size   = "2G" # remember to add the suffix, examples: 512M, 1G
       # kubelet_args = ["kube-reserved=cpu=50m,memory=300Mi,ephemeral-storage=1Gi", "system-reserved=cpu=250m,memory=300Mi"]
@@ -193,11 +193,11 @@ module "kube-hetzner" {
     },
     {
       name        = "agent-large",
-      server_type = "cax31",
+      server_type = "cpx21",
       location    = "nbg1",
       labels      = [],
       taints      = [],
-      count       = 0
+      count       = 1
 
       # Fine-grained control over placement groups (nodes in the same group are spread over different physical servers, 10 nodes per placement group max):
       # placement_group = "default"

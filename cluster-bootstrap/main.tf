@@ -66,11 +66,11 @@ resource "helm_release" "erpnext" {
   name             = "erpnext"
   repository       = "https://helm.erpnext.com"
   chart            = "erpnext"
-#   version          = ">= 10.0.0"
+  version          = "7.0.61"
   namespace        = "erpnext"
   create_namespace = true
-  wait             = true
-  wait_for_jobs    = true
+  wait             = false
+  wait_for_jobs    = false
 
   values = [
     file("${path.module}/helm-values/erpnext.yaml")

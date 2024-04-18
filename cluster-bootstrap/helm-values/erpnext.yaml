@@ -386,10 +386,10 @@ mariadb:
   # https://github.com/bitnami/charts/tree/master/bitnami/mariadb
   enabled: true
   auth:
-    rootPassword: "mariadb_password"
+    rootPassword: "admin"
     username: "erpnext"
-    password: "changeit"
-    replicationPassword: "changeit"
+    password: "admin"
+    replicationPassword: "admin"
   primary:
     service:
       ports:
