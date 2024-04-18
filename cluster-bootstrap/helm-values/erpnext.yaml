@@ -230,13 +230,13 @@ persistence:
     enabled: true
     # existingClaim: ""
     size: 10Gi
-    storageClass: "nfc"
+    storageClass: "nfs"
   logs:
     # Container based log search and analytics stack recommended
     enabled: false
     # existingClaim: ""
     size: 10Gi
-    storageClass: "nfc"
+    storageClass: "nfs"
 
 # Ingress
 ingress:
