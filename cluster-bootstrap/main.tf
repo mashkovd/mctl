@@ -19,7 +19,7 @@ resource "helm_release" "argocd" {
   create_namespace = true
   wait             = true
   wait_for_jobs    = true
-  values = [
+  values           = [
     file("${path.module}/helm-values/argocd.yaml")
   ]
 }
@@ -33,9 +33,48 @@ resource "helm_release" "vault-secrets-operator" {
   create_namespace = true
   wait             = true
   wait_for_jobs    = true
-#  values           = [
-#    file("${path.module}/helm-values/argocd.yaml")
-#  ]
+  #  values           = [
+  #    file("${path.module}/helm-values/argocd.yaml")
+  #  ]
+}
+
+
+resource "helm_release" "mariadb" {
+  name             = "mariadb"
+  repository       = "https://charts.bitnami.com/bitnami"
+  chart            = "mariadb"
+  version          = "18.0.2"
+  namespace        = "mariadb"
+  create_namespace = true
+  wait             = true
+  wait_for_jobs    = true
+  set {
+    name  = "persistence.size"
+    value = "10Gi"
+  }
+  set {
+    name  = "auth.rootPassword"
+    value = "mariadb_password"
+  }
+  #   values = [
+  #     file("${path.module}/helm-values/argocd.yaml")
+  #   ]
+}
+
+
+resource "helm_release" "erpnext" {
+  name             = "erpnext"
+  repository       = "https://helm.erpnext.com"
+  chart            = "erpnext"
+#   version          = ">= 10.0.0"
+  namespace        = "erpnext"
+  create_namespace = true
+  wait             = true
+  wait_for_jobs    = true
+
+  values = [
+    file("${path.module}/helm-values/erpnext.yaml")
+  ]
 }
 #resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
