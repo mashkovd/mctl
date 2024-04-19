@@ -574,7 +574,6 @@ adminPassword: grafana
 ### ref: http://docs.grafana.org/administration/provisioning/#datasources
 ###
 #
-
 datasources:
   datasources.yaml:
     apiVersion: 1
