@@ -93,7 +93,7 @@ resource "helm_release" "nfs" {
   name             = "nfs"
   repository       = "https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner"
   chart            = "nfs-server-provisioner"
-#   version          = "7.0.61"
+  version          = "1.8.0"
   namespace        = "nfs"
   create_namespace = true
   wait             = false
