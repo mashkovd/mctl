@@ -82,28 +82,43 @@ resource "helm_release" "grafana" {
 #   }
 #   set {
 #     name  = "auth.rootPassword"
-#     value = "mariadb_password"
+#     value = "admin"
 #   }
 #   #   values = [
 #   #     file("${path.module}/helm-values/argocd.yaml")
 #   #   ]
 # }
 
-
-resource "helm_release" "erpnext" {
-  name             = "erpnext"
-  repository       = "https://helm.erpnext.com"
-  chart            = "erpnext"
-  version          = "7.0.61"
-  namespace        = "erpnext"
+resource "helm_release" "nfs" {
+  name             = "nfs"
+  repository       = "https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner"
+  chart            = "nfs-server-provisioner"
+#   version          = "7.0.61"
+  namespace        = "nfs"
   create_namespace = true
   wait             = false
   wait_for_jobs    = false
 
   values = [
-    file("${path.module}/helm-values/erpnext.yaml")
+#     file("${path.module}/helm-values/nfs.yaml")
   ]
 }
+
+# resource "helm_release" "erpnext" {
+#   name             = "erpnext"
+#   repository       = "https://helm.erpnext.com"
+#   chart            = "erpnext"
+#   version          = "7.0.61"
+#   namespace        = "erpnext"
+#   create_namespace = true
+#   wait             = false
+#   wait_for_jobs    = false
+#
+#   values = [
+#     file("${path.module}/helm-values/erpnext.yaml")
+#   ]
+# }
+
 #resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
 #  repository       = "https://kubernetes.github.io/dashboard"
