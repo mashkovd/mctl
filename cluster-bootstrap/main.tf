@@ -119,7 +119,7 @@ resource "helm_release" "nfs" {
 #   ]
 # }
 
-#resource "helm_release" "kubernetes-dashboard" {
+# resource "helm_release" "kubernetes-dashboard" {
 #  name             = "kubernetes-dashboard"
 #  repository       = "https://kubernetes.github.io/dashboard"
 #  chart            = "kubernetes-dashboard"
@@ -129,9 +129,9 @@ resource "helm_release" "nfs" {
 #  wait             = false
 #  wait_for_jobs    = false
 #  values           = [
-#    "${file("cluster-bootstrap/helm-values/kubernetes-dashboard.yaml")}"
+#    file("${path.module}/helm-values/kubernetes-dashboard.yaml")
 #  ]
-#}
+# }
 
 #resource "helm_release" "gitlab" {
 #  name             = "gitlab"
