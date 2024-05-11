@@ -446,7 +446,7 @@ configs:
 
   # -- Repository credentials to be used as Templates for other repos
   ## Creates a secret for each key/value specified below to create repository credentials
-  credentialTemplates: {}
+  credentialTemplates:
     # github-enterprise-creds-1:
     #   url: https://github.com/argoproj
     #   githubAppID: 1
@@ -456,10 +456,10 @@ configs:
     #     -----BEGIN OPENSSH PRIVATE KEY-----
     #     ...
     #     -----END OPENSSH PRIVATE KEY-----
-    # https-creds:
-    #   url: https://github.com/argoproj
-    #   password: my-password
-    #   username: my-username
+    https-creds:
+       url: https://github.com/mashkovd
+       password: "my-password"
+       username: mashkovd
     # ssh-creds:
     #  url: git@github.com:argoproj-labs
     #  sshPrivateKey: |
@@ -473,7 +473,7 @@ configs:
   # -- Repositories list to be used by applications
   ## Creates a secret for each key/value specified below to create repositories
   ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
-  repositories: {}
+  repositories:
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
     #   name: istio.io
@@ -484,8 +484,8 @@ configs:
     #   type: helm
     #   password: my-password
     #   username: my-username
-    # private-repo:
-    #   url: https://github.com/argoproj/private-repo
+     private-repo:
+       url: https://github.com/mashkovd/argocdApps
 
   # -- Annotations to be added to `configs.repositories` Secret
   repositoriesAnnotations: {}

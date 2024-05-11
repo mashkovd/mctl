@@ -1076,6 +1076,8 @@ module "cluster-bootstrap" {
   ]
 
   # <variables here>
+  argo_cd_private_key = var.argo_cd_private_key
+
 }
 
 output "kubeconfig" {
@@ -1100,4 +1102,10 @@ variable "ssh_public_key" {
 
 variable "argo_cd_password" {
   sensitive = true
+}
+
+variable "argo_cd_private_key" {
+  description = "The private key for the GitHub App used by Argo CD"
+  sensitive = true
+  type = string
 }

@@ -10,20 +10,6 @@ terraform {
 }
 
 
-resource "helm_release" "argocd" {
-  name             = "argocd"
-  repository       = "https://argoproj.github.io/argo-helm"
-  chart            = "argo-cd"
-  version          = "5.49.0"
-  namespace        = "argocd"
-  create_namespace = true
-  wait             = true
-  wait_for_jobs    = true
-  values           = [
-    file("${path.module}/helm-values/argocd.yaml")
-  ]
-}
-
 resource "helm_release" "vault-secrets-operator" {
   name             = "vault-secrets-operator"
   repository       = "https://helm.releases.hashicorp.com"
@@ -48,16 +34,16 @@ resource "helm_release" "prometheus" {
   wait             = false
   wait_for_jobs    = false
 
-#   values = [
-#     file("${path.module}/helm-values/prometheus.yaml")
-#   ]
+  #   values = [
+  #     file("${path.module}/helm-values/prometheus.yaml")
+  #   ]
 }
 
 resource "helm_release" "grafana" {
   name             = "grafana"
   repository       = "https://grafana.github.io/helm-charts"
-  chart            = "grafana"
-#   version          = "7.0.61"
+  chart = "grafana"
+  #   version          = "7.0.61"
   namespace        = "grafana"
   create_namespace = true
   wait             = true
@@ -100,7 +86,7 @@ resource "helm_release" "nfs" {
   wait_for_jobs    = false
 
   values = [
-#     file("${path.module}/helm-values/nfs.yaml")
+    #     file("${path.module}/helm-values/nfs.yaml")
   ]
 }
 
