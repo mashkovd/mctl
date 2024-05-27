@@ -176,8 +176,8 @@ module "kube-hetzner" {
   agent_nodepools = [
     {
       name        = "agent-small",
-      server_type = "cax21",
-      location    = "fsn1",
+      server_type = "cx31",
+      location    = "nbg1",
       labels      = [],
       taints      = [],
       count       = 0
