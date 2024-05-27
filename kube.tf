@@ -205,20 +205,20 @@ module "kube-hetzner" {
       # Enable automatic backups via Hetzner (default: false)
       # backups = true
     },
-#         {
-#       name        = "agent-large-intel",
-#       server_type = "cx31",
-#       location    = "nbg1",
-#       labels      = [],
-#       taints      = [],
-#       count       = 1
+        {
+      name        = "agent-large-intel",
+      server_type = "cx41",
+      location    = "nbg1",
+      labels      = [],
+      taints      = [],
+      count       = 1
 #
 #       # Fine-grained control over placement groups (nodes in the same group are spread over different physical servers, 10 nodes per placement group max):
 #       # placement_group = "default"
 #
 #       # Enable automatic backups via Hetzner (default: false)
 #       # backups = true
-#     },
+    },
     {
       name        = "storage",
       server_type = "cpx21",
