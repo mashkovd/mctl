@@ -180,7 +180,7 @@ module "kube-hetzner" {
       location    = "nbg1",
       labels      = [],
       taints      = [],
-      count       = 1
+      count       = 0
       # swap_size   = "2G" # remember to add the suffix, examples: 512M, 1G
       # zram_size   = "2G" # remember to add the suffix, examples: 512M, 1G
       # kubelet_args = ["kube-reserved=cpu=50m,memory=300Mi,ephemeral-storage=1Gi", "system-reserved=cpu=250m,memory=300Mi"]
