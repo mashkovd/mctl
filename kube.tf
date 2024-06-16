@@ -192,7 +192,7 @@ module "kube-hetzner" {
       # backups = true
     },
     {
-      name        = "agent-large-intel",
+      name        = "agent-large-intel-cx42",
       server_type = "cx42",
       location    = "nbg1",
       labels      = [],
