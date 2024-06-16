@@ -192,12 +192,12 @@ module "kube-hetzner" {
       # backups = true
     },
     {
-      name        = "agent-large-amd",
-      server_type = "cax21",
+      name        = "agent-large-intel",
+      server_type = "cx42",
       location    = "nbg1",
       labels      = [],
       taints      = [],
-      count       = 0
+      count       = 1
 
       # Fine-grained control over placement groups (nodes in the same group are spread over different physical servers, 10 nodes per placement group max):
       # placement_group = "default"
