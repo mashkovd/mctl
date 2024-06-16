@@ -57,7 +57,7 @@ resource "helm_release" "mariadb" {
   name             = "mariadb"
   repository       = "https://charts.bitnami.com/bitnami"
   chart            = "mariadb"
-  version          = "11.4.2"
+  version          = "18.0.2"
   namespace        = "mariadb"
   create_namespace = true
   wait             = true
