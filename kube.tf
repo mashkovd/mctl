@@ -211,7 +211,7 @@ module "kube-hetzner" {
       location    = "nbg1",
       labels      = [],
       taints      = [],
-      count       = 1
+      count       = 0
 #
 #       # Fine-grained control over placement groups (nodes in the same group are spread over different physical servers, 10 nodes per placement group max):
 #       # placement_group = "default"
