@@ -10,6 +10,11 @@ mariadb:
     service:
       ports:
         mysql: 3306
+    extraFlags: >-
+      --skip-character-set-client-handshake
+      --skip-innodb-read-only-compressed
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
     configuration: |-
       [mysqld]
       skip-name-resolve

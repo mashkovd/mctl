@@ -53,27 +53,27 @@ resource "helm_release" "grafana" {
     file("${path.module}/helm-values/grafana.yaml")
   ]
 }
-# resource "helm_release" "mariadb" {
-#   name             = "mariadb"
-#   repository       = "https://charts.bitnami.com/bitnami"
-#   chart            = "mariadb"
-#   version          = "11.4.2"
-#   namespace        = "mariadb"
-#   create_namespace = true
-#   wait             = true
-#   wait_for_jobs    = true
-#   set {
-#     name  = "persistence.size"
-#     value = "10Gi"
-#   }
-#   set {
-#     name  = "auth.rootPassword"
-#     value = "admin"
-#   }
-#     values = [
-#       file("${path.module}/helm-values/mariadb.yaml")
-#     ]
-# }
+resource "helm_release" "mariadb" {
+  name             = "mariadb"
+  repository       = "https://charts.bitnami.com/bitnami"
+  chart            = "mariadb"
+  version          = "11.4.2"
+  namespace        = "mariadb"
+  create_namespace = true
+  wait             = true
+  wait_for_jobs    = true
+  set {
+    name  = "persistence.size"
+    value = "10Gi"
+  }
+  set {
+    name  = "auth.rootPassword"
+    value = "admin"
+  }
+    values = [
+      file("${path.module}/helm-values/mariadb.yaml")
+    ]
+}
 
 resource "helm_release" "nfs" {
   name             = "nfs"
