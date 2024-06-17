@@ -402,9 +402,9 @@ configs:
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#clusters
   ## - https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#external-cluster-credentials
   ## - https://argo-cd.readthedocs.io/en/stable/user-guide/projects/#project-scoped-repositories-and-clusters
-  clusterCredentials: []
-    # - name: mycluster
-    #   server: https://mycluster.com
+  clusterCredentials: {}
+    # mycluster:
+    #   server: https://mycluster.example.com
     #   labels: {}
     #   annotations: {}
     #   config:
@@ -446,7 +446,7 @@ configs:
 
   # -- Repository credentials to be used as Templates for other repos
   ## Creates a secret for each key/value specified below to create repository credentials
-  credentialTemplates:
+  credentialTemplates: {}
     # github-enterprise-creds-1:
     #   url: https://github.com/argoproj
     #   githubAppID: 1
@@ -473,7 +473,7 @@ configs:
   # -- Repositories list to be used by applications
   ## Creates a secret for each key/value specified below to create repositories
   ## Note: the last example in the list would use a repository credential template, configured under "configs.credentialTemplates".
-  repositories:
+  repositories: {}
     # istio-helm-repo:
     #   url: https://storage.googleapis.com/istio-prerelease/daily-build/master-latest-daily/charts
     #   name: istio.io
@@ -612,22 +612,6 @@ controller:
   # -- Secrets with credentials to pull images from a private registry
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
-
-  # -- DEPRECATED - Application controller commandline flags
-  args: {}
-  # DEPRECATED - Use configs.params to override
-  #  # -- define the application controller `--status-processors`
-  #  statusProcessors: "20"
-  #  # -- define the application controller `--operation-processors`
-  #  operationProcessors: "10"
-  #  # -- define the application controller `--app-hard-resync`
-  #  appHardResyncPeriod: "0"
-  #  # -- define the application controller `--app-resync`
-  #  appResyncPeriod: "180"
-  #  # -- define the application controller `--self-heal-timeout-seconds`
-  #  selfHealTimeout: "5"
-  #  # -- define the application controller `--repo-server-timeout-seconds`
-  #  repoServerTimeoutSeconds: "60"
 
   # -- Additional command line arguments to pass to application controller
   extraArgs: []
@@ -930,7 +914,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.37.0
+    tag: v2.38.0
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1052,6 +1036,12 @@ dex:
   livenessProbe:
     # -- Enable Kubernetes liveness probe for Dex >= 2.28.0
     enabled: false
+    # -- Http path to use for the liveness probe
+    httpPath: /healthz/live
+    # -- Http port to use for the liveness probe
+    httpPort: metrics
+    # -- Scheme to use for for the liveness probe (can be HTTP or HTTPS)
+    httpScheme: HTTP
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1066,6 +1056,12 @@ dex:
   readinessProbe:
     # -- Enable Kubernetes readiness probe for Dex >= 2.28.0
     enabled: false
+    # -- Http path to use for the readiness probe
+    httpPath: /healthz/ready
+    # -- Http port to use for the readiness probe
+    httpPort: metrics
+    # -- Scheme to use for for the liveness probe (can be HTTP or HTTPS)
+    httpScheme: HTTP
     # -- Minimum consecutive failures for the [probe] to be considered failed after having succeeded
     failureThreshold: 3
     # -- Number of seconds after the container has started before [probe] is initiated
@@ -1079,6 +1075,9 @@ dex:
 
   # -- terminationGracePeriodSeconds for container lifecycle hook
   terminationGracePeriodSeconds: 30
+
+  # -- Automount API credentials for the Service Account into the pod.
+  automountServiceAccountToken: true
 
   serviceAccount:
     # -- Create dex service account
@@ -1168,7 +1167,7 @@ redis:
     # -- Redis repository
     repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.13-alpine
+    tag: 7.2.4-alpine
     # -- Redis image pull policy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1184,7 +1183,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
       # -- Tag to use for the redis-exporter
-      tag: 1.53.0
+      tag: 1.58.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1389,9 +1388,9 @@ redis-ha:
   ## Redis image
   image:
     # -- Redis repository
-    repository: redis
+    repository: public.ecr.aws/docker/library/redis
     # -- Redis tag
-    tag: 7.0.13-alpine
+    tag: 7.2.4-alpine
   ## Prometheus redis-exporter sidecar
   exporter:
     # -- Enable Prometheus redis-exporter sidecar
@@ -1399,7 +1398,7 @@ redis-ha:
     # -- Repository to use for the redis-exporter
     image: public.ecr.aws/bitnami/redis-exporter
     # -- Tag to use for the redis-exporter
-    tag: 1.53.0
+    tag: 1.58.0
   persistentVolume:
     # -- Configures persistence on Redis nodes
     enabled: false
@@ -1577,10 +1576,10 @@ server:
 
     ## Argo UI extensions image
     image:
-      # -- Repository to use for extensions image
-      repository: "ghcr.io/argoproj-labs/argocd-extensions"
-      # -- Tag to use for extensions image
-      tag: "v0.2.1"
+      # -- Repository to use for extension installer image
+      repository: "quay.io/argoprojlabs/argocd-extension-installer"
+      # -- Tag to use for extension installer image
+      tag: "v0.0.5"
       # -- Image pull policy for extensions
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
@@ -1591,6 +1590,7 @@ server:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
       allowPrivilegeEscalation: false
+      runAsUser: 1000
       seccompProfile:
         type: RuntimeDefault
       capabilities:
@@ -2455,16 +2455,7 @@ applicationSet:
   # @default -- `[]` (defaults to global.imagePullSecrets)
   imagePullSecrets: []
 
-  # -- DEPRECATED - ApplicationSet controller command line flags
-  args: {}
-    # DEPRECATED - Use configs.params.applicationsetcontroller.policy to override
-    # -- How application is synced between the generator and the cluster
-    # policy: sync
-    # DEPRECATED - Use configs.params.applicationsetcontroller.dryrun to override
-    # -- Enable dry run mode
-    # dryRun: false
-
-  # -- List of extra cli args to add
+  # -- ApplicationSet controller command line flags
   extraArgs: []
 
   # -- Environment variables to pass to the ApplicationSet controller
