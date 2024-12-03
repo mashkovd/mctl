@@ -75,28 +75,6 @@ resource "helm_release" "mariadb" {
     ]
 }
 
-resource "helm_release" "mariadb-control" {
-  name             = "mariadb-control"
-  repository       = "https://charts.bitnami.com/bitnami"
-  chart            = "mariadb"
-  version          = "18.0.2"
-  namespace        = "mariadb-control"
-  create_namespace = true
-  wait             = true
-  wait_for_jobs    = true
-  set {
-    name  = "persistence.size"
-    value = "10Gi"
-  }
-  set {
-    name  = "auth.rootPassword"
-    value = "admin"
-  }
-    values = [
-      file("${path.module}/helm-values/mariadb-control.yaml")
-    ]
-}
-
 resource "helm_release" "nfs" {
   name             = "nfs"
   repository       = "https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner"
